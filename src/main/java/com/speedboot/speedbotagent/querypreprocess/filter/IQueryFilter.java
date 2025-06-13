@@ -1,7 +1,7 @@
 package com.speedboot.speedbotagent.querypreprocess.filter;
 
-import com.speedboot.speedbotagent.dto.BaseQueryDTO;
+import com.speedboot.speedbotagent.dto.ChatDTO;
 
 public interface IQueryFilter {
-    BaseQueryDTO filter(BaseQueryDTO query);
+    ChatDTO filter(ChatDTO query);
 }

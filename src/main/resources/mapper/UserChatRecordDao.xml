@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.speedboot.speedbotagent.db.dao.UserChatRecordDao">
+
+    <resultMap id="userChatRecordResultMap" type="com.speedboot.speedbotagent.db.entity.UserChatRecord">
+        <result property="userId" column="user_id"/>
+        <result property="conversationId" column="conversation_id"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.speedboot.speedbotagent.db.entity.UserChatRecord">
+        INSERT INTO user_chat_record_t(user_id, conversation_id, create_time)
+        VALUES (#{userId}, #{conversationId},CURRENT_TIMESTAMP())
+    </insert>
+
+
+</mapper>

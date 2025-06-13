@@ -1,3 +1,8 @@
+-- 注意这个表字段就是这样定义的， 见MysqlChatMemoryRepositoryDialect
+-- 要放在resources下
+
+-- DROP TABLE IF EXISTS SPRING_AI_CHAT_MEMORY;
+
 CREATE TABLE IF NOT EXISTS default_db.SPRING_AI_CHAT_MEMORY (
     conversation_id VARCHAR(36) NOT NULL,
     content TEXT NOT NULL,

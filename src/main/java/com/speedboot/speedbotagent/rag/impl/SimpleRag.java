@@ -1,7 +1,9 @@
 package com.speedboot.speedbotagent.rag.impl;
 
 import com.speedboot.speedbotagent.common.util.ConverterUtils;
-import com.speedboot.speedbotagent.dto.BaseQueryDTO;
+import com.speedboot.speedbotagent.db.dao.UserChatRecordDao;
+import com.speedboot.speedbotagent.db.entity.UserChatRecord;
+import com.speedboot.speedbotagent.dto.ChatDTO;
 import com.speedboot.speedbotagent.dto.knowledge.BaseKnowledgeDTO;
 import com.speedboot.speedbotagent.dto.knowledge.DocumentInfoByOverlapChunkDTO;
 import com.speedboot.speedbotagent.dto.rag.RagResponseDTO;
@@ -13,6 +15,7 @@ import com.speedboot.speedbotagent.querypreprocess.rewrite.IQueryReWriter;
 import com.speedboot.speedbotagent.rag.IRag;
 import com.speedboot.speedbotagent.rerank.IReranker;
 import com.speedboot.speedbotagent.retrieve.IRetriever;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.client.ChatClientResponse;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.messages.MessageType;
@@ -25,6 +28,7 @@ import reactor.core.publisher.Flux;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 public class SimpleRag implements IRag {
@@ -48,33 +52,43 @@ public class SimpleRag implements IRag {
     @Autowired
     private IGenerator<ChatClientResponse> generator;
 
+    @Autowired
+    private UserChatRecordDao userChatRecordDao;
+
     public SimpleRag() {
         this.userPromptTemplate = PromptTemplates.DEFAULT_PROMPT_TEMPLATE_BUILDER
                 .template(PromptTemplates.CHAT_PROMPT_TEMPLATE.get(MessageType.USER.getValue())).build();
     }
 
     @Override
-    public Flux<RagResponseDTO> chat(BaseQueryDTO baseQueryDTO) {
+    public Flux<RagResponseDTO> chat(ChatDTO chatDTO) {
+        if (StringUtils.isEmpty(chatDTO.getConversationId())) {
+            chatDTO.setConversationId(UUID.randomUUID().toString());
+            userChatRecordDao.insert(new UserChatRecord(chatDTO.getUserId(), chatDTO.getConversationId()));
+        }
+
+
         // clean
-        baseQueryDTO = queryFilter.filter(baseQueryDTO);
+        chatDTO = queryFilter.filter(chatDTO);
 
         // rewrite
-        List<BaseQueryDTO> baseQueryDTOs = queryReWriter.reWrite(baseQueryDTO);
-        baseQueryDTO = baseQueryDTOs.get(0);
+        List<ChatDTO> ChatDTOs = queryReWriter.reWrite(chatDTO);
+        chatDTO = ChatDTOs.get(0);
 
         // retrieve
         WeaviateVectorDBQueryDTO vectorDBQueryDTO =
-                ConverterUtils.getWeaviateVectorDBQueryDTOFromBaseQueryDTO(baseQueryDTO);
+                ConverterUtils.getWeaviateVectorDBQueryDTOFromBaseQueryDTO(chatDTO);
         List<DocumentInfoByOverlapChunkDTO> retrieve = retriever.retrieve(vectorDBQueryDTO);
 
         // rerank
-        retrieve = (List<DocumentInfoByOverlapChunkDTO>) reranker.rerank(baseQueryDTO.getQuery(), retrieve);
+        retrieve = (List<DocumentInfoByOverlapChunkDTO>) reranker.rerank(chatDTO.getQuery(), retrieve);
 
         // prompt
-        Prompt prompt = getPrompt(baseQueryDTO.getQuery(), retrieve);
+        Prompt prompt = getPrompt(chatDTO.getQuery(), retrieve);
 
         // chat
-        Flux<ChatClientResponse> response = generator.streamGenerate(prompt.getContents(), baseQueryDTO.getThreadId());
+        Flux<ChatClientResponse> response =
+                generator.streamGenerate(prompt.getContents(), chatDTO.getConversationId());
 
         Flux<RagResponseDTO> answer = response.map(chatClientResponse -> {
             RagResponseDTO ragResponseDTO = new RagResponseDTO();
@@ -97,7 +111,7 @@ public class SimpleRag implements IRag {
                         .distinct()
                         .toArray(RagResponseDTO[]::new));
         Flux<RagResponseDTO> identity = Flux.just(
-                new RagResponseDTO(RagResponseDTO.MessageEnum.identity, baseQueryDTO.getThreadId()));
+                new RagResponseDTO(RagResponseDTO.MessageEnum.identity, chatDTO.getConversationId()));
 
         return answer.concatWith(rel).concatWith(identity);
     }

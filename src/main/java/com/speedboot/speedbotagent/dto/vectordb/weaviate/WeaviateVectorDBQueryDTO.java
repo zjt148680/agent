@@ -8,13 +8,13 @@ public class WeaviateVectorDBQueryDTO extends VectorDBQueryDTO {
 
     String vectorProperty;
 
-    public WeaviateVectorDBQueryDTO(String userId, String query, String collection, String vectorProperty) {
+    public WeaviateVectorDBQueryDTO(long userId, String query, String collection, String vectorProperty) {
         super(userId, query);
         this.collection = collection;
         this.vectorProperty = vectorProperty;
     }
 
-    public WeaviateVectorDBQueryDTO(String userId, String query) {
+    public WeaviateVectorDBQueryDTO(long userId, String query) {
         super(userId, query);
     }
 

@@ -1,9 +1,9 @@
 package com.speedboot.speedbotagent.querypreprocess.rewrite;
 
-import com.speedboot.speedbotagent.dto.BaseQueryDTO;
+import com.speedboot.speedbotagent.dto.ChatDTO;
 
 import java.util.List;
 
 public interface IQueryReWriter {
-    List<BaseQueryDTO> reWrite(BaseQueryDTO query);
+    List<ChatDTO> reWrite(ChatDTO query);
 }

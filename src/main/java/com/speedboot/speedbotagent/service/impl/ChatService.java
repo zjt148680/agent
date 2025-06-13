@@ -1,6 +1,6 @@
 package com.speedboot.speedbotagent.service.impl;
 
-import com.speedboot.speedbotagent.dto.BaseQueryDTO;
+import com.speedboot.speedbotagent.dto.ChatDTO;
 import com.speedboot.speedbotagent.dto.rag.RagResponseDTO;
 import com.speedboot.speedbotagent.rag.IRag;
 import com.speedboot.speedbotagent.service.IChatService;
@@ -15,7 +15,7 @@ public class ChatService implements IChatService {
     @Qualifier("simpleRag")
     IRag rag;
 
-    public Flux<RagResponseDTO> chat(BaseQueryDTO baseQueryDTO) {
+    public Flux<RagResponseDTO> chat(ChatDTO baseQueryDTO) {
         return rag.chat(baseQueryDTO);
     }
 }

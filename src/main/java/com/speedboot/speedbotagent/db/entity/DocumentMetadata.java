@@ -1,7 +1,7 @@
 package com.speedboot.speedbotagent.db.entity;
 
 public class DocumentMetadata {
-    private int userId;
+    private long userId;
 
     private int documentId;
 
@@ -25,11 +25,11 @@ public class DocumentMetadata {
         this.chunkCount = chunkCount;
     }
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 

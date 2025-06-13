@@ -51,7 +51,7 @@ public class KnowledgeManageService implements IKnowledgeManageService {
     // todo 事务一致性
     @Override
     public UploadFileRespDTO uploadFiles(UploadFilesDTO uploadFilesDTO) {
-        int userId = uploadFilesDTO.getUserId();
+        long userId = uploadFilesDTO.getUserId();
         List<ExecuteRes> executeResList = Arrays.stream(uploadFilesDTO.getFiles())
                 .map(file -> processFile(userId, file))
                 .toList();
@@ -66,7 +66,7 @@ public class KnowledgeManageService implements IKnowledgeManageService {
         return new UploadFileRespDTO(totalCount, failCount, failedFileNames);
     }
 
-    private ExecuteRes processFile(int userId, MultipartFile file) {
+    private ExecuteRes processFile(long userId, MultipartFile file) {
         try {
             // 读取文件并分块
             InputStream inputStream = file.getInputStream();
@@ -95,7 +95,7 @@ public class KnowledgeManageService implements IKnowledgeManageService {
         }
     }
 
-    private DocumentMetadata constructDocumentMetadata(int userId, String documentName, int chunkCount) {
+    private DocumentMetadata constructDocumentMetadata(long userId, String documentName, int chunkCount) {
         DocumentMetadata documentMetadata = new DocumentMetadata();
         documentMetadata.setUserId(userId);
         documentMetadata.setDocumentName(documentName);

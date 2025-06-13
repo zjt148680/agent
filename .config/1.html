@@ -375,7 +375,7 @@
             const documentsList = document.getElementById('documents-list');
             const typingIndicator = document.getElementById('typing-indicator');
 
-            var threadId = "";
+            var conversationId = "";
 
             // 发送消息
             function sendMessage() {
@@ -483,7 +483,7 @@
                     const response = await fetch(uri, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ "query": query, "threadId": threadId })
+                        body: JSON.stringify({ "query": query, "conversationId": conversationId, "userId": 111 })
                     });
 
                     // 处理流式响应
@@ -522,7 +522,7 @@
                                 } else if (data.messageType === 'related_document') {
                                     addDocument(data.content);
                                 } else if (data.messageType === 'identity') {
-                                    threadId = data.content;
+                                    conversationId = data.content;
                                 }
 
                                 // 滚动到底部
