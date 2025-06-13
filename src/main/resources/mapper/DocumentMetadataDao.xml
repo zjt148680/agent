@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.speedboot.speedbotagent.db.dao.DocumentMetadataDao">
+
+    <resultMap id="pdfMetadataResultMap" type="com.speedboot.speedbotagent.db.entity.DocumentMetadata">
+        <result property="userId" column="user_id"/>
+        <result property="documentId" column="document_id"/>
+        <result property="documentName" column="document_name"/>
+        <result property="documentType" column="document_type"/>
+        <result property="documentUrl" column="document_url"/>
+        <result property="chunkCount" column="chunk_count"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.speedboot.speedbotagent.db.entity.DocumentMetadata" useGeneratedKeys="true" keyProperty="documentId">
+        INSERT INTO document_metadata_t(user_id, document_name, document_type, document_url, chunk_count)
+        VALUES (#{userId}, #{documentName}, #{documentType}, #{documentUrl}, #{chunkCount})
+    </insert>
+
+    <insert id="batchInsert" parameterType="list" useGeneratedKeys="true" keyProperty="documentId">
+        INSERT INTO document_metadata_t(user_id, document_name, document_type, document_url, chunk_count)
+        VALUES
+        <foreach collection="list" item="item" separator=",">
+            (#{userId}, #{documentName}, #{documentType}, #{documentUrl}, #{chunkCount})
+        </foreach>
+    </insert>
+
+</mapper>

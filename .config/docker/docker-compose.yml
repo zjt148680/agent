@@ -1,0 +1,66 @@
+services:
+  vllm:
+    image: vllm/vllm-openai:${VLLM_TAG}
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    volumes:
+      - C:/Users/zjt/.cache/huggingface:/root/.cache/huggingface
+    ports:
+      - ${VLLM_PORT}:8000
+    command: >
+      --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --max_model_len 50000 --api-key sk-mytoken
+    ipc: host
+
+  weaviate:
+    image: semitechnologies/weaviate:${WEAVIATE_TAG}
+    ports:
+      - ${WEAVIATE_PORT1}:8080
+      - ${WEAVIATE_PORT2}:50051
+    restart: on-failure:0
+    volumes:
+      - C:/Users/zjt/.weaviate:/var/lib/weaviate
+    environment:
+      QUERY_DEFAULTS_LIMIT: 20
+      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
+      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
+      DEFAULT_VECTORIZER_MODULE: text2vec-transformers
+      ENABLE_MODULES: text2vec-transformers
+      TRANSFORMERS_INFERENCE_API: http://custom-t2v-server:8080
+      CLUSTER_HOSTNAME: 'node1'
+      AUTOSCHEMA_ENABLED: 'false'
+
+  custom-t2v-server:
+    image: custom-t2v-transformers:${CUSTOM_T2V_SERVER_TAG}
+    ports:
+      - ${T2V_PORT}:8080
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+    environment:
+      ENABLE_CUDA: 1
+
+  mysql:
+    image: mysql:${MYSQL_TAG}
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: mysql_password
+      MYSQL_DATABASE: default_db               # 可选：初始化时创建数据库
+    volumes:
+      - C:/Users/zjt/.mysql:/var/lib/mysql
+    ports:
+      - ${MYSQL_PORT}:3306
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "mysqladmin ping -h localhost"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
