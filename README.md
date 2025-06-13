@@ -46,6 +46,8 @@ t2v-transformers-models项目根目录下运行Dockerfile文件最后的build命
 
 ## 4.1. 需要覆盖的配置项
 
+下面的项在主模块配置文件中重写即可
+
 ```
 spring.application.name=speedbotagent
 server.port=${SERVER_PORT:17777}
