@@ -16,7 +16,7 @@ t2v-transformers-models项目根目录下运行Dockerfile文件最后的build命
 
 执行./.config/db/*.sql
 
-共两张表
+共三张表
 
 ## 2.2 注意
 
