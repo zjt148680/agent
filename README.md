@@ -58,3 +58,9 @@ spring.datasource.password=${DATABASE_PASSWORD:mysql_password}
 # 5. 当作module引入时的处理
 
 按实际修改
+
+# 6. 前端页面
+
+./config/1.html
+
+供测试用
