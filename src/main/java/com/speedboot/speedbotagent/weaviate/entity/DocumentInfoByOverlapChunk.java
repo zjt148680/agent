@@ -38,11 +38,11 @@ public class DocumentInfoByOverlapChunk {
 
     public Map<String, Object> toMap() {
         return Map.of(
-            "documentId", documentId,
-            "documentName", documentName,
-            "documentType", documentType,
-            "chunkId", chunkId,
-            "chunkText", chunkText
+                "documentId", documentId,
+                "documentName", documentName,
+                "documentType", documentType,
+                "chunkId", chunkId,
+                "chunkText", chunkText
         );
     }
 
