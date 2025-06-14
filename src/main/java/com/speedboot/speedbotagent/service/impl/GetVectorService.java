@@ -6,6 +6,7 @@ import com.speedboot.speedbotagent.dto.t2vservice.VectorRequestDTO;
 import com.speedboot.speedbotagent.dto.t2vservice.VectorResponseDTO;
 import com.speedboot.speedbotagent.service.IGetVectorService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -27,6 +28,7 @@ public class GetVectorService implements IGetVectorService {
 
     private final WebClient webClient;
 
+    @Qualifier("taskExecutor")
     @Autowired
     private ThreadPoolTaskExecutor executor;
 
