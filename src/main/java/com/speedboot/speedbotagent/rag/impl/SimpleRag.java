@@ -18,7 +18,6 @@ import com.speedboot.speedbotagent.retrieve.IRetriever;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.client.ChatClientResponse;
 import org.springframework.ai.chat.memory.ChatMemoryRepository;
-import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,7 +56,7 @@ public class SimpleRag implements IRag {
 
     public SimpleRag() {
         this.userPromptTemplate = PromptTemplates.DEFAULT_PROMPT_TEMPLATE_BUILDER
-                .template(PromptTemplates.CHAT_PROMPT_TEMPLATE.get(MessageType.USER.getValue())).build();
+                .template(PromptTemplates.CHAT_PROMPT_TEMPLATE_USER).build();
     }
 
     @Override

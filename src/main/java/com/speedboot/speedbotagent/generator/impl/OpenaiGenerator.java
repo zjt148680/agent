@@ -9,7 +9,6 @@ import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
-import org.springframework.ai.chat.messages.MessageType;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Flux;
 
@@ -29,7 +28,7 @@ public class OpenaiGenerator implements IGenerator<ChatClientResponse> {
                 .maxMessages(10).build();
         this.chatClientWithMemory = chatClientBuilder.defaultAdvisors(new MessageChatMemoryAdvisor(chatMemory))
                 .defaultTemplateRenderer(PromptTemplates.DEFAULT_PROMPT_TEMPLATE_RENDERER)
-                .defaultSystem(PromptTemplates.CHAT_PROMPT_TEMPLATE.get(MessageType.SYSTEM.getValue()))
+                .defaultSystem(PromptTemplates.CHAT_PROMPT_TEMPLATE_SYSTEM)
                 .build();
         this.chatClient = chatClientBuilder.build();
     }
