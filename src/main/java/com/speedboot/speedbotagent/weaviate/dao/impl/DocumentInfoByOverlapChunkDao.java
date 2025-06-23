@@ -25,7 +25,8 @@ public class DocumentInfoByOverlapChunkDao implements IDocumentInfoByOverlapChun
     private static final Logger LOGGER = org.slf4j.LoggerFactory.getLogger(DocumentInfoByOverlapChunkDao.class);
 
     private static final String COLLECTION_NAME = "DocumentInfoByOverlapChunk";
-    private static final String VECTOR_PROPERTY = "chunkTextVector";
+
+    private static final String[] COMP_VECTOR_PROPERTIES = {"chunkTextVector"};
 
     private static final int TOP_K = 20;
 
@@ -39,7 +40,7 @@ public class DocumentInfoByOverlapChunkDao implements IDocumentInfoByOverlapChun
         // 和chunkTextVector比较
         NearTextArgument nearText = NearTextArgument.builder()
                 .concepts(new String[]{query})
-                .targetVectors(new String[]{VECTOR_PROPERTY})
+                .targetVectors(COMP_VECTOR_PROPERTIES)
                 .build();
 
         // 要返回的字段

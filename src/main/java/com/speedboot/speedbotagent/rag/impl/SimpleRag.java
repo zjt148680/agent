@@ -66,7 +66,6 @@ public class SimpleRag implements IRag {
             userChatRecordDao.insert(new UserChatRecord(chatDTO.getUserId(), chatDTO.getConversationId()));
         }
 
-
         // clean
         chatDTO = queryFilter.filter(chatDTO);
 
@@ -99,9 +98,7 @@ public class SimpleRag implements IRag {
         });
 
         List<String> relDocumentNames = retrieve.stream()
-                .map(documentInfoByOverlapChunkDTO ->
-                        documentInfoByOverlapChunkDTO.getDocumentInfoByOverlapChunk().getDocumentName() + ": \n\n" +
-                        documentInfoByOverlapChunkDTO.getDocumentInfoByOverlapChunk().getChunkText())
+                .map(this::documentInfoByOverlapChunkDTO2Text)
                 .distinct()
                 .toList();
         Flux<RagResponseDTO> rel = Flux.just(
@@ -128,5 +125,10 @@ public class SimpleRag implements IRag {
             sb.append("[").append(i + 1).append("]. ").append(knowledge.get(i).getText()).append("\n");
         }
         return sb.toString();
+    }
+
+    private String documentInfoByOverlapChunkDTO2Text(DocumentInfoByOverlapChunkDTO documentInfoByOverlapChunkDTO) {
+        return documentInfoByOverlapChunkDTO.getDocumentInfoByOverlapChunk().getDocumentName() + ": \n\n" +
+                documentInfoByOverlapChunkDTO.getDocumentInfoByOverlapChunk().getChunkText();
     }
 }
