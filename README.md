@@ -2,7 +2,7 @@
 
 ## 1.1 新增表
 
-执行./.config/db/*.sql
+执行`./.config/db/*.sql`
 
 共三张表
 
@@ -12,7 +12,7 @@
 
 # 2. docker-compose
 
-./.config/docker/docker-compose.yml
+`./.config/docker/docker-compose.yml`
 
 ## 2.1. 启动
 
@@ -25,6 +25,8 @@
 ## 2.3 统一修改
 
 注意挂载目录，这部分需要全部修改
+
+linux的root用户使用的文件夹是`/root`，即将当前的`C:/Users/zjt/`替换为`/root/`
 
 # 3. 向量库表的创建（只需在weaviate服务启动成功后在bash执行一次）
 
@@ -88,6 +90,6 @@ t2v-transformers-models项目根目录下运行Dockerfile文件最后的build命
 
 # 7. 前端页面
 
-./config/1.html
+`./config/1.html`
 
 供测试用
