@@ -46,7 +46,7 @@ public class SimpleRag implements IRag {
     IRetriever<DocumentInfoByOverlapChunkDTO, WeaviateVectorDBQueryDTO> retriever;
 
     @Autowired
-    IReranker reranker;
+    IReranker<DocumentInfoByOverlapChunkDTO> reranker;
 
     @Autowired
     private IGenerator<ChatClientResponse> generator;
@@ -79,7 +79,7 @@ public class SimpleRag implements IRag {
         List<DocumentInfoByOverlapChunkDTO> retrieve = retriever.retrieve(vectorDBQueryDTO);
 
         // rerank
-        retrieve = (List<DocumentInfoByOverlapChunkDTO>) reranker.rerank(chatDTO.getQuery(), retrieve);
+        retrieve = reranker.rerank(chatDTO.getQuery(), retrieve);
 
         // prompt
         Prompt prompt = getPrompt(chatDTO.getQuery(), retrieve);

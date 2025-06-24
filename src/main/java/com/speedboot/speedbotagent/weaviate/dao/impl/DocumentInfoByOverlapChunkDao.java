@@ -28,45 +28,35 @@ public class DocumentInfoByOverlapChunkDao implements IDocumentInfoByOverlapChun
 
     private static final String[] COMP_VECTOR_PROPERTIES = {"chunkTextVector"};
 
-    private static final int TOP_K = 20;
+    private static final int TOP_K = 10;
+
+    private static final float THRESHOLD = 0.4f;
 
     @Autowired
     private WeaviateClient client;
 
     @Override
-    public List<DocumentInfoByOverlapChunk> simpleQuery(WeaviateVectorDBQueryDTO vectorDBQueryDTO) {
+    public List<DocumentInfoByOverlapChunk> retrieve(WeaviateVectorDBQueryDTO vectorDBQueryDTO) {
         String query = vectorDBQueryDTO.getQuery();
 
-        // 和chunkTextVector比较
+        // 和COMP_VECTOR_PROPERTIES的向量比较
         NearTextArgument nearText = NearTextArgument.builder()
                 .concepts(new String[]{query})
                 .targetVectors(COMP_VECTOR_PROPERTIES)
+                .distance(THRESHOLD)
                 .build();
 
         // 要返回的字段
         Fields fields = getFields();
 
-        // where
-//        WhereFilter whereFilter = WhereFilter.builder()
-//                .path("documentId")  // 列名
-//                .operator(Operator.ContainsAny) // 在给定的值中即可
-//                .valueInt(new Integer[]{1,2,3})
-//                .build();
-//        WhereArgument whereArgument = WhereArgument.builder()
-//                .filter(whereFilter)
-//                .build();
-
         String q = GetBuilder.builder()
                 .className(COLLECTION_NAME)
                 .fields(fields)
                 .withNearTextFilter(nearText)
-//                .withWhereFilter(whereArgument)
                 .limit(TOP_K)
                 .build()
                 .buildQuery();
-
         Result<GraphQLResponse> result = client.graphQL().raw().withQuery(q).run();
-
         if (result.hasErrors()) {
             throw new SpeedBotException("检索文档失败，error: %s".formatted(
                     result.getError().getMessages().get(0).getMessage()));

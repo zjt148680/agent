@@ -7,6 +7,6 @@ import java.util.List;
 /**
  * 根据query重新对knowledge进行排序
  */
-public interface IReranker {
-    List<? extends BaseKnowledgeDTO> rerank(String query, List<? extends BaseKnowledgeDTO> knowledge);
+public interface IReranker<T extends BaseKnowledgeDTO> {
+    List<T> rerank(String query, List<T> knowledge);
 }

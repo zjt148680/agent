@@ -38,7 +38,7 @@ public class EvalController {
     IRetriever<DocumentInfoByOverlapChunkDTO, WeaviateVectorDBQueryDTO> retriever;
 
     @Autowired
-    IReranker reranker;
+    IReranker<DocumentInfoByOverlapChunkDTO> reranker;
 
     @GetMapping(value = "/cost/retrieve")
     public EvalTimeCostVO retrieveCost() {

@@ -17,7 +17,7 @@ public class DocumentInfoByOverlapChunkRetriever implements IRetriever<DocumentI
 
     @Override
     public List<DocumentInfoByOverlapChunkDTO> retrieve(WeaviateVectorDBQueryDTO vectorDBQueryDTO) {
-        List<DocumentInfoByOverlapChunk> res =  documentInfoDao.simpleQuery(vectorDBQueryDTO);
+        List<DocumentInfoByOverlapChunk> res =  documentInfoDao.retrieve(vectorDBQueryDTO);
         return res.stream().map(DocumentInfoByOverlapChunkDTO::new).toList();
     }
 
