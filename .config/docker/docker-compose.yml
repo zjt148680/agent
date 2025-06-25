@@ -10,6 +10,8 @@ services:
               capabilities: [gpu]
     volumes:
       - C:/Users/zjt/.cache/huggingface:/root/.cache/huggingface
+    environment:
+      - HF_HUB_OFFLINE=1
     ports:
       - ${VLLM_PORT}:8000
     command: >
