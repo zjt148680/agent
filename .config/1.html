@@ -367,7 +367,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const uri = "http://127.0.0.1:17777/chat";
+            const uri = "http://127.0.0.1:17777/agent/chat";
 
             const messageInput = document.getElementById('message-input');
             const sendButton = document.getElementById('send-button');
@@ -483,7 +483,7 @@
                     const response = await fetch(uri, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ "query": query, "conversationId": conversationId, "userId": 111 })
+                        body: JSON.stringify({ "query": query, "conversationId": conversationId })
                     });
 
                     // 处理流式响应

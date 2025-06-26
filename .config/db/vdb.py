@@ -9,8 +9,8 @@ def main():
     try:
         client = weaviate.connect_to_local(
             host="127.0.0.1",
-            port=8080,
-            grpc_port=50051,
+            port=22223,
+            grpc_port=22224,
         )
         print(client.is_ready())
 

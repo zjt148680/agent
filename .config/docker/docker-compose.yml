@@ -9,13 +9,13 @@ services:
               count: all
               capabilities: [gpu]
     volumes:
-      - C:/Users/zjt/.cache/huggingface:/root/.cache/huggingface
+      - C:/Users/zjt/.cache:/root/.cache
     environment:
-      - HF_HUB_OFFLINE=1
+      - VLLM_USE_MODELSCOPE=true
     ports:
       - ${VLLM_PORT}:8000
     command: >
-      --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --max_model_len 50000 --api-key sk-mytoken
+      --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --max_model_len 5000 --api-key sk-mytoken
     ipc: host
 
   weaviate:
