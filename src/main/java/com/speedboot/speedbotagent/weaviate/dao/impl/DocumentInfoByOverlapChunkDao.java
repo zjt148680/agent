@@ -82,7 +82,9 @@ public class DocumentInfoByOverlapChunkDao implements IDocumentInfoByOverlapChun
         ObjectsBatcher.AutoBatchConfig autoBatchConfig = ObjectsBatcher.AutoBatchConfig.defaultConfig()
                 .callback(result -> {
                     if (result.hasErrors()) {
-                        LOGGER.error("批量插入数据失败：%s".formatted(result.getError()));
+                        String errorMsg = result.getError().getMessages().get(0).getMessage();
+                        LOGGER.error("批量插入数据失败：%s".formatted(errorMsg));
+                        throw new SpeedBotException(errorMsg);
                     }
                 }).build();
         ObjectsBatcher batcher = client.batch().objectsAutoBatcher(autoBatchConfig);
