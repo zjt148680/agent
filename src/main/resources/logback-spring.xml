@@ -23,23 +23,17 @@
         <appender-ref ref="CONSOLE"/>
     </root>
 
-    <!--    &lt;!&ndash; 根据环境切换配置 &ndash;&gt;-->
-    <!--    <springProfile name="dev">-->
-    <!--        <root level="INFO">-->
-    <!--            <appender-ref ref="CONSOLE"/>-->
-    <!--        </root>-->
-    <!--    </springProfile>-->
+    <!-- 根据环境切换配置 -->
+    <springProfile name="test">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+        </root>
+    </springProfile>
 
-    <!--    <springProfile name="prod">-->
-    <!--        <root level="INFO">-->
-    <!--            <appender-ref ref="CONSOLE"/>-->
-    <!--            <appender-ref ref="FILE"/>-->
-    <!--        </root>-->
-    <!--    </springProfile>-->
-
-    <!--    &lt;!&ndash; 异步日志 &ndash;&gt;-->
-    <!--    <appender name="ASYNC_FILE" class="ch.qos.logback.classic.AsyncAppender">-->
-    <!--        <queueSize>512</queueSize>-->
-    <!--        <appender-ref ref="FILE"/>-->
-    <!--    </appender>-->
+    <springProfile name="prod">
+        <root level="INFO">
+            <appender-ref ref="CONSOLE"/>
+            <appender-ref ref="FILE"/>
+        </root>
+    </springProfile>
 </configuration>

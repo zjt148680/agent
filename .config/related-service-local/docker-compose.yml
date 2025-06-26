@@ -15,7 +15,7 @@ services:
     ports:
       - ${VLLM_PORT}:8000
     command: >
-      --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --max_model_len 5000 --api-key sk-mytoken
+      --model deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B --max_model_len 15000 --api-key sk-mytoken
     ipc: host
 
   weaviate:
