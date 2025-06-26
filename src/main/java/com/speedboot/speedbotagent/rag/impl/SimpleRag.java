@@ -17,7 +17,6 @@ import com.speedboot.speedbotagent.rerank.IReranker;
 import com.speedboot.speedbotagent.retrieve.IRetriever;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ai.chat.client.ChatClientResponse;
-import org.springframework.ai.chat.memory.ChatMemoryRepository;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.PromptTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,9 +31,6 @@ import java.util.UUID;
 @Component
 public class SimpleRag implements IRag {
     private final PromptTemplate userPromptTemplate;
-
-    @Autowired
-    ChatMemoryRepository chatMemoryRepository;
 
     @Autowired
     IQueryFilter queryFilter;

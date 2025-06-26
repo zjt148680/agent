@@ -20,8 +20,8 @@ public class ChatController {
     IChatService chatService;
 
     @PostMapping(value = "", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public Flux<ChatResponseVO> chat(@RequestBody ChatDTO baseQueryDTO) {
-        Flux<RagResponseDTO> ragResponseDTO = chatService.chat(baseQueryDTO);
+    public Flux<ChatResponseVO> chat(@RequestBody ChatDTO chatDTO) {
+        Flux<RagResponseDTO> ragResponseDTO = chatService.chat(chatDTO);
         return ragResponseDTO.map(r -> new ChatResponseVO(r.getMessageType(), r.getContent()));
     }
 }
