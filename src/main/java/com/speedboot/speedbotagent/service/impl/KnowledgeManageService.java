@@ -19,12 +19,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
  * todo 事务一致性，目前未开放给用户，所以没处理
- *
  */
 @Service
 public class KnowledgeManageService implements IKnowledgeManageService {
@@ -51,10 +49,7 @@ public class KnowledgeManageService implements IKnowledgeManageService {
     // todo 事务一致性
     @Override
     public UploadFileRespDTO uploadFiles(UploadFilesDTO uploadFilesDTO) {
-        long userId = uploadFilesDTO.getUserId();
-        List<ExecuteRes> executeResList = Arrays.stream(uploadFilesDTO.getFiles())
-                .map(file -> processFile(userId, file))
-                .toList();
+        List<ExecuteRes> executeResList = processFile(uploadFilesDTO);
 
         int totalCount = uploadFilesDTO.getFiles().length;
         List<String> failedFileNames = executeResList.stream()
@@ -66,33 +61,40 @@ public class KnowledgeManageService implements IKnowledgeManageService {
         return new UploadFileRespDTO(totalCount, failCount, failedFileNames);
     }
 
-    private ExecuteRes processFile(long userId, MultipartFile file) {
-        try {
-            // 读取文件并分块
-            InputStream inputStream = file.getInputStream();
-            String text = reader.read(inputStream);
-            List<String> chunks = splitter.split(text);
-            chunks = chunks.stream()
-                    .map(cleaner::clean)
-                    .toList();
+    private List<ExecuteRes> processFile(UploadFilesDTO uploadFilesDTO) {
+        List<ExecuteRes> executeResList = new ArrayList<>();
+        long userId = uploadFilesDTO.getUserId();
+        for (int i = 0; i < uploadFilesDTO.getFiles().length; i++) {
+            MultipartFile file = uploadFilesDTO.getFiles()[i];
+            try {
+                // 读取文件并分块
+                InputStream inputStream = file.getInputStream();
+                String text = reader.read(inputStream);
+                List<String> chunks = splitter.split(text);
+                chunks = chunks.stream()
+                        .map(cleaner::clean)
+                        .toList();
 
-            // 保存到数据库
-            String fileName = file.getOriginalFilename();
-            DocumentMetadata documentMetadata = constructDocumentMetadata(userId, fileName, chunks.size());
-            documentMetadataDao.insert(documentMetadata);
+                // 保存到数据库
+                String fileName = file.getOriginalFilename();
+                DocumentMetadata documentMetadata = constructDocumentMetadata(userId, fileName, chunks.size());
+                documentMetadataDao.insert(documentMetadata);
 
-            // 保存到向量数据库
-            List<DocumentInfoByOverlapChunk> documentInfos = constructDocumentInfoByOverlapChunks(
-                    documentMetadata,
-                    chunks
-            );
-            documentInfoService.batchInsert(documentInfos);
+                // 保存到向量数据库
+                List<DocumentInfoByOverlapChunk> documentInfos = constructDocumentInfoByOverlapChunks(
+                        documentMetadata,
+                        chunks
+                );
+                documentInfoService.batchInsert(documentInfos);
 
-            return new ExecuteRes(true, fileName);
-        } catch (Exception e) {
-            LOGGER.error("处理文件%s时出错。".formatted(file.getOriginalFilename()), e);
-            return new ExecuteRes(false, file.getOriginalFilename());
+                executeResList.add(new ExecuteRes(true, fileName));
+            } catch (Exception e) {
+                LOGGER.error("处理文件%s时出错。".formatted(file.getOriginalFilename()), e);
+                executeResList.add(new ExecuteRes(false, file.getOriginalFilename()));
+            }
         }
+
+        return executeResList;
     }
 
     private DocumentMetadata constructDocumentMetadata(long userId, String documentName, int chunkCount) {

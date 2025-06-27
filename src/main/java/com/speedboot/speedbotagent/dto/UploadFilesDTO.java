@@ -2,14 +2,19 @@ package com.speedboot.speedbotagent.dto;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
+
 public class UploadFilesDTO {
     long userId;
 
     MultipartFile[] files;
 
-    public UploadFilesDTO(long userId, MultipartFile[] files) {
+    List<String> urls;
+
+    public UploadFilesDTO(long userId, MultipartFile[] files, List<String> urls) {
         this.userId = userId;
         this.files = files;
+        this.urls = urls;
     }
 
     public UploadFilesDTO() {
@@ -29,5 +34,13 @@ public class UploadFilesDTO {
 
     public void setFiles(MultipartFile[] files) {
         this.files = files;
+    }
+
+    public List<String> getUrls() {
+        return urls;
+    }
+
+    public void setUrls(List<String> urls) {
+        this.urls = urls;
     }
 }
