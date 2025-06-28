@@ -1,27 +1,4 @@
-1. weaviate服务启动
-
-```yml
-services:
-  weaviate:
-    image: semitechnologies/weaviate:1.31.0-5e97f92.amd64
-    ports:
-      - 22223:8080
-      - 22224:50051
-    restart: on-failure:0
-    volumes:
-      - /root/.weaviate:/var/lib/weaviate
-    environment:
-      QUERY_DEFAULTS_LIMIT: 200
-      AUTHENTICATION_ANONYMOUS_ACCESS_ENABLED: 'true'
-      PERSISTENCE_DATA_PATH: '/var/lib/weaviate'
-      DEFAULT_VECTORIZER_MODULE: text2vec-transformers
-      ENABLE_MODULES: text2vec-transformers
-      TRANSFORMERS_INFERENCE_API: http://10.100.15.27:22225
-      CLUSTER_HOSTNAME: 'node1'
-      AUTOSCHEMA_ENABLED: 'false'
-```
-
-2. 数据库新增表
+1. 数据库新增表
 
 ```sql
 DROP TABLE IF EXISTS document_metadata_t;
@@ -64,65 +41,11 @@ create table user_chat_record_t
 );
 ```
 
-3. 向量库表创建
-
-```python
-# pip install weaviate-client
-
-import weaviate
-from weaviate.collections.classes.config import Property, DataType, Configure
-
-
-def main():
-    global client
-    try:
-        client = weaviate.connect_to_local(
-            host="127.0.0.1",
-            port=22223,
-            grpc_port=22224,
-        )
-        print(client.is_ready())
-
-        client.collections.delete("DocumentInfoByOverlapChunk")
-        d = client.collections.create(
-            "DocumentInfoByOverlapChunk",
-            properties=[
-                Property(name="documentId", data_type=DataType.INT),
-                Property(name="documentName", data_type=DataType.TEXT),
-                Property(name="documentType", data_type=DataType.TEXT),
-                Property(name="chunkId", data_type=DataType.INT),
-                Property(name="chunkText", data_type=DataType.TEXT),
-            ],
-            vectorizer_config=[
-                Configure.NamedVectors.text2vec_transformers(
-                    name="documentNameVector",
-                    source_properties=["documentName"]
-                ),
-                Configure.NamedVectors.text2vec_transformers(
-                    name="chunkTextVector",
-                    source_properties=["chunkText"]
-                ),
-            ],
-        )
-        client.close()
-    except:
-        print("Error")
-        if client:
-            client.close()
-
-
-if __name__ == '__main__':
-    main()
-
-```
-
-4. docker方式启动
+2. docker方式启动
 
 ```bash
 docker run
--e DATABASE_URL=
--e DATABASE_USERNAME=
--e DATABASE_PASSWORD=
 -p 17777:17777
+-e SPRING_PROFILES_ACTIVE=prod
 zjt148680/speedbotagent:0.0.1 
 ```

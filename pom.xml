@@ -32,7 +32,8 @@
         <mybatis.version>3.0.4</mybatis.version>
         <nd4j.version>1.0.0-M2.1</nd4j.version>
         <csv.version>1.14.0</csv.version>
-        <spring-ai-starter-model-chat-memory-repository-jdbc.version>1.0.0</spring-ai-starter-model-chat-memory-repository-jdbc.version>
+        <spring-ai--chat-memory.version>1.0.0</spring-ai--chat-memory.version>
+        <jasypt.version>3.0.5</jasypt.version>
     </properties>
     <dependencies>
         <dependency>
@@ -127,7 +128,13 @@
         <dependency>
             <groupId>org.springframework.ai</groupId>
             <artifactId>spring-ai-starter-model-chat-memory-repository-jdbc</artifactId>
-            <version>${spring-ai-starter-model-chat-memory-repository-jdbc.version}</version>
+            <version>${spring-ai--chat-memory.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.ulisesbocchio</groupId>
+            <artifactId>jasypt-spring-boot-starter</artifactId>
+            <version>${jasypt.version}</version>
         </dependency>
 
     </dependencies>
